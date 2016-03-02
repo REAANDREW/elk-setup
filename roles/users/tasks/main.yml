@@ -1,0 +1,18 @@
+- hosts: ec2_hosts
+  name: configuration play
+  gather_facts: False
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  vars:
+    app_code_user: "ubuntu" # remote user
+  tasks:
+    -   name: Make sure user is on server and generate ssh key for it
+        user: name={{ app_code_user }}
+            state=present
+            generate_ssh_key=yes
+    -   name: Add public keys for developers
+        authorized_key: user={{ app_code_user }}
+                        key="{{ lookup('file', item) }}"
+        with_fileglob:
+            - ./keys/public/*.pub
