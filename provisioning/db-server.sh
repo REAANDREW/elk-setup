@@ -6,3 +6,9 @@ sudo apt-get install -y mongodb-org
 sudo cp /vagrant/files/mongod.service /lib/systemd/system/mongod.service
 sed -i 's/bindIp: 127.0.0.1/bindIp: 0.0.0.0/g' /etc/mongod.conf
 sudo service mongod restart
+
+# Install Postgre
+
+sudo apt-get -y install postgresql-9.4
+sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '0.0.0.0'/g" /etc/postgresql/9.4/main/postgresql.conf
+
