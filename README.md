@@ -2,7 +2,7 @@
 
 Playground for me to further understand ELK 
 
-** Run the following command first thing to setup public/private key for SSH between the different instances.  You will be prompted for a passphrase for the SSH Key **
+**Run the following command first thing to setup public/private key for SSH between the different instances.  You will be prompted for a passphrase for the SSH Key**
 
 ```shell
 sh bootstrap.sh
@@ -15,4 +15,4 @@ sh bootstrap.sh
 
 # Todos
 
-- [] Port to ansible
+- [ ] Port to ansible
