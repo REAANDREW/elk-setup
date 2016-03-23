@@ -13,3 +13,15 @@ sudo cp /vagrant/files/filebeat.yml /etc/filebeat/filebeat.yml
 
 sudo service filebeat restart
 sudo update-rc.d filebeat defaults 95 10
+
+sudo apt-get install topbeat
+
+sudo cp /vagrant/files/topbeat.yml /etc/topbeat/topbeat.yml
+sudo service topbeat restart
+sudo update-rc.d topbeat defaults 95 10
+
+sudo apt-get install packetbeat
+sudo cp /vagrant/files/packetbeat.yml /etc/packetbeat/packetbeat.yml
+sudo service packetbeat restart
+sudo update-rc.d topbeat defaults 95 10
+
