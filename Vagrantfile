@@ -26,19 +26,6 @@ Vagrant.configure(2) do |config|
        node.vm.provision "shell", path: "./provisioning/elk-server.sh"
    end
 
-   config.vm.define "application-server" do |node|
-       node.vm.network "private_network", ip: "192.168.56.50"
-       node.vm.provision "file", source: "./keys/public/id_rsa.pub", destination: "~/.ssh/remote.pub"
-       node.vm.provision "shell", inline: "cat ~vagrant/.ssh/remote.pub >> ~vagrant/.ssh/authorized_keys"
-       node.vm.provider :virtualbox do |vb|
-           vb.name = "app"
-           vb.customize ["modifyvm", :id, "--vram", "64"]
-           vb.customize ["modifyvm", :id, "--memory", "4092"]
-           vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-       end
-       node.vm.provision "shell", path: "./provisioning/application-server.sh"
-   end
-
    config.vm.define "db-server" do |node|
        node.vm.network "private_network", ip: "192.168.56.51"
        node.vm.provision "file", source: "./keys/public/id_rsa.pub", destination: "~/.ssh/remote.pub"
@@ -50,6 +37,19 @@ Vagrant.configure(2) do |config|
            vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
        end
        node.vm.provision "shell", path: "./provisioning/db-server.sh"
+   end
+
+   config.vm.define "application-server" do |node|
+       node.vm.network "private_network", ip: "192.168.56.50"
+       node.vm.provision "file", source: "./keys/public/id_rsa.pub", destination: "~/.ssh/remote.pub"
+       node.vm.provision "shell", inline: "cat ~vagrant/.ssh/remote.pub >> ~vagrant/.ssh/authorized_keys"
+       node.vm.provider :virtualbox do |vb|
+           vb.name = "app"
+           vb.customize ["modifyvm", :id, "--vram", "64"]
+           vb.customize ["modifyvm", :id, "--memory", "4092"]
+           vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+       end
+       node.vm.provision "shell", path: "./provisioning/application-server.sh"
    end
 
 end
