@@ -40,6 +40,10 @@ Vagrant.configure(2) do |config|
            vb.customize ["modifyvm", :id, "--memory", "4092"]
            vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
        end
+       node.vm.provision "shell", path: "./provisioning/beats.sh"
+       node.vm.provision "shell", path: "./provisioning/mongodb.sh"
+       node.vm.provision "shell", path: "./provisioning/postgresql.sh"
+       node.vm.provision "shell", path: "./provisioning/memcached.sh"
        node.vm.provision "shell", path: "./provisioning/db-server.sh"
    end
 
@@ -56,6 +60,7 @@ Vagrant.configure(2) do |config|
            vb.customize ["modifyvm", :id, "--memory", "4092"]
            vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
        end
+       node.vm.provision "shell", path: "./provisioning/beats.sh"
        node.vm.provision "shell", path: "./provisioning/application-server.sh"
    end
 

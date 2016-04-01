@@ -39,9 +39,11 @@ app.use(function(req,res,next){
   
   onFinished(res, function (err, res) {
     collection.meter('requestsPerSecond').mark();
+    collection.meter('requestsPerSecond:byPath:'+req.path).mark();
     var duration = moment.duration(moment().diff(startTime));
     var milliseconds = duration.asMilliseconds();
     collection.histogram('responseTime').update(milliseconds);
+    collection.histogram('responseTime:byPath:'+req.path).update(milliseconds);
   });
 
   next();
