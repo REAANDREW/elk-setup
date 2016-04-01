@@ -1,3 +1,7 @@
+sudo apt-get -y install build-essential
+
+scp -o StrictHostKeyChecking=no vagrant@192.168.56.40:/etc/pki/tls/certs/logstash-forwarder.crt /tmp
+
 sudo mkdir -p /etc/pki/tls/certs
 sudo cp /tmp/logstash-forwarder.crt /etc/pki/tls/certs/
 
@@ -6,20 +10,21 @@ echo "deb https://packages.elastic.co/beats/apt stable main" |  sudo tee -a /etc
 wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 
 sudo apt-get update
-sudo apt-get install filebeat
+sudo apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -y filebeat
 
 sudo cp /vagrant/files/filebeat.yml /etc/filebeat/filebeat.yml
 
 sudo service filebeat restart
 sudo update-rc.d filebeat defaults 95 10
 
-sudo apt-get install topbeat
+sudo apt-get -y install topbeat
+sudo apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -y topbeat
 
 sudo cp /vagrant/files/topbeat.yml /etc/topbeat/topbeat.yml
 sudo service topbeat restart
 sudo update-rc.d topbeat defaults 95 10
 
-sudo apt-get install packetbeat
+sudo apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -y packetbeat
 sudo cp /vagrant/files/packetbeat.yml /etc/packetbeat/packetbeat.yml
 sudo service packetbeat restart
 sudo update-rc.d topbeat defaults 95 10
@@ -28,9 +33,19 @@ sudo update-rc.d topbeat defaults 95 10
 curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
-# Start the Node.js Postgress Example Application
-sudo npm install -g forever
+#(cp -r /vagrant/samples/node-postgres-todo/ /home/vagrant/ && chown -R vagrant:vagrant /home/vagrant/node-postgres-todo/ && cd node-postgres-todo && sudo npm install && sudo -u vagrant npm run-script setup)
+#su - vagrant
+#(cd /home/vagrant/node-postgres-todo/ && forever start ./bin/www)
 
-(cp -r /vagrant/samples/node-postgres-todo/ /home/vagrant/ && chown -R vagrant:vagrant /home/vagrant/node-postgres-todo/ && cd node-postgres-todo && npm install && sudo -u vagrant npm run-script setup)
+applications="node-postgres-todo"
 
-(cd /home/vagrant/node-postgres-todo/ && sudo -u vagrant forever start ./bin/www)
+for app in $applications
+do
+    filename="/var/log/${app}.application.log"
+    logRotateFile=$(cat "/vagrant/files/rotate-template" | sed "s/app_name/${app}/g")
+    sudo touch "${filename}"
+    sudo echo "rotate my log file" > "${filename}"
+    sudo chown vagrant "${filename}"
+    sudo logrotate -f /etc/logrotate.conf
+done
+

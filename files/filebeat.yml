@@ -4,6 +4,12 @@
 filebeat:
   # List of prospectors to fetch data.
   prospectors:
+    -
+      paths:
+        - /var/log/*.application.log
+      input_type: log
+      document_type: json
+        
     # Each - is a prospector. Below are the prospector specific configurations
     -
       # Paths that should be crawled and fetched. Glob based paths.
@@ -13,8 +19,8 @@ filebeat:
       # Make sure not file is defined twice as this can lead to unexpected behaviour.
       paths:
         #- /var/log/*.log
-        - /var/log/auth.log
-        - /var/log/syslog
+        #- /var/log/auth.log
+        #- /var/log/syslog
         #- c:\programdata\elasticsearch\logs\*
 
       # Configure the file encoding for reading files with international characters

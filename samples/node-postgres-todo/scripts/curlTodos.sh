@@ -11,7 +11,7 @@ curl http://192.168.56.50:3000/api/v1/todos
 echo
 echo "Make some updates and complete the last TODO"
 href="$(curl -s http://192.168.56.50:3000/api/v1/todos | jq '.[length-1]' | jq -c '.links[] | select(.method=="put") | .href')"
-href=${href//\"/}
+href='${href/"//}'
 
 curl -X PUT -H 'Content-type:application/json' -d '{"text":"TEXT UPDATED - updated","complete":false}' $href
 curl -X PUT -H 'Content-type:application/json' -d '{"text":"TEST UPDATED - updated","complete":true}' $href

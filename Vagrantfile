@@ -13,9 +13,10 @@ Vagrant.configure(2) do |config|
 
    config.vm.define "elk-server" do |node|
        node.vm.network "private_network", ip: "192.168.56.40"
-       node.vm.provision "file", source: "./keys/private/id_rsa", destination: "/home/vagrant/.ssh/id_rsa"
+       node.vm.provision "file", source: "./keys/private/id_rsa", destination: "/tmp/id_rsa"
        node.vm.provision "file", source: "./keys/public/id_rsa.pub", destination: "/home/vagrant/.ssh/id_rsa.pub"
        node.vm.provision "file", source: "./keys/public/id_rsa.pub", destination: "~/.ssh/remote.pub"
+       node.vm.provision "shell", inline: "mv /tmp/id_rsa ~vagrant/.ssh/id_rsa"
        node.vm.provision "shell", inline: "cat ~vagrant/.ssh/remote.pub >> ~vagrant/.ssh/authorized_keys"
        node.vm.provider :virtualbox do |vb|
            vb.name = "elk"
@@ -28,7 +29,10 @@ Vagrant.configure(2) do |config|
 
    config.vm.define "db-server" do |node|
        node.vm.network "private_network", ip: "192.168.56.51"
+       node.vm.provision "file", source: "./keys/private/id_rsa", destination: "/tmp/id_rsa"
+       node.vm.provision "file", source: "./keys/public/id_rsa.pub", destination: "/home/vagrant/.ssh/id_rsa.pub"
        node.vm.provision "file", source: "./keys/public/id_rsa.pub", destination: "~/.ssh/remote.pub"
+       node.vm.provision "shell", inline: "mv /tmp/id_rsa ~vagrant/.ssh/id_rsa"
        node.vm.provision "shell", inline: "cat ~vagrant/.ssh/remote.pub >> ~vagrant/.ssh/authorized_keys"
        node.vm.provider :virtualbox do |vb|
            vb.name = "db"
@@ -41,7 +45,10 @@ Vagrant.configure(2) do |config|
 
    config.vm.define "application-server" do |node|
        node.vm.network "private_network", ip: "192.168.56.50"
+       node.vm.provision "file", source: "./keys/private/id_rsa", destination: "/tmp/id_rsa"
+       node.vm.provision "file", source: "./keys/public/id_rsa.pub", destination: "/home/vagrant/.ssh/id_rsa.pub"
        node.vm.provision "file", source: "./keys/public/id_rsa.pub", destination: "~/.ssh/remote.pub"
+       node.vm.provision "shell", inline: "mv /tmp/id_rsa ~vagrant/.ssh/id_rsa"
        node.vm.provision "shell", inline: "cat ~vagrant/.ssh/remote.pub >> ~vagrant/.ssh/authorized_keys"
        node.vm.provider :virtualbox do |vb|
            vb.name = "app"
